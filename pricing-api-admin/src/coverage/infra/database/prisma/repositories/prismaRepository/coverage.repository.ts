@@ -1,9 +1,9 @@
-import { PrismaService } from '../../prisma.service';
 import { Injectable } from '@nestjs/common/decorators';
+import { Coverage } from 'src/coverage/entitie/coverage';
+import { PrismaService } from '../../prisma.service';
 import { CoverageRepository } from '../coverage.respository';
 import { CreateCoverageDTO } from 'src/coverage/dto/create.coverage.dto';
 import { UpdateCoverageDto } from 'src/coverage/dto/update.coverage.dto';
-import { Coverage } from 'src/coverage/entitie/coverage';
 
 @Injectable()
 export class PrismaCoverageRepository implements CoverageRepository {
@@ -32,16 +32,16 @@ export class PrismaCoverageRepository implements CoverageRepository {
     return coverage as Coverage;
   }
 
-  async findById(coverageId: string): Promise<Coverage | null> {
-    const coverageExists = await this.prisma.coverage.findUnique({
-      where: { coverageId: coverageId },
+  async findById(data: any): Promise<Coverage | null> {
+    const coverageExists = await this.prisma.coverage.findFirst({
+      where: { coverageId: data.coverageId },
     });
 
     if (!coverageExists) {
       return null;
     }
 
-    return coverageExists as Coverage;
+    return coverageExists;
   }
 
   async delete(covergeId: string): Promise<boolean> {

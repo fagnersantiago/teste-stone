@@ -12,7 +12,7 @@ export class CreateCoverageController {
   //@UseGuards(AccessGuard)
   async handle(@Body() body: CreateCoverageDTO) {
     const { name, description, premium, capital } = body;
-    console.log(body);
+
     const coverage = await this.coverageService.execute({
       name,
       description,

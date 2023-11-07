@@ -1,15 +1,15 @@
 import { Controller, Param, Patch } from '@nestjs/common';
 import { DeleteCoverageService } from './delete.coverage.service';
 
-@Controller('users')
+@Controller('coverage/delete')
 export class DeleteCoverageController {
   constructor(private deleteCoverageService: DeleteCoverageService) {}
 
-  @Patch('/coverage')
+  @Patch('/:coverageId')
   // @UseGuards(AccessGuard)
   async handle(@Param('coverageId') coverageId: string) {
-    const update = await this.deleteCoverageService.execute(coverageId);
+    const deleted = await this.deleteCoverageService.execute(coverageId);
 
-    return { data: { update } };
+    return { data: { code: 200, deleted } };
   }
 }

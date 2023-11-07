@@ -4,11 +4,11 @@ import { UpdateCoverageService } from './update.coverage.service';
 import { UpdateCoverageDto } from '../dto/update.coverage.dto';
 //import { AccessGuard } from '../auth/strategies/access.guards';
 //@UseGuards(AuthGuard('jwt'))
-@Controller('users')
+@Controller('coverage/update')
 export class UpdateCoverageController {
   constructor(private updateCoverageService: UpdateCoverageService) {}
 
-  @Patch('/coverage')
+  @Patch('/:coverageId')
   // @UseGuards(AccessGuard)
   async handle(
     @Param('coverageId') coverageId: string,

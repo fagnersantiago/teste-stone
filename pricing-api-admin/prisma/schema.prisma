@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Coverage {
-  coverageId  String  @unique @default(uuid())
+  coverageId  String  @id @default(uuid())
   name        String
   description String
   capital     String

@@ -1,5 +1,5 @@
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CoverageRepository } from '../infra/database/prisma/repositories/coverage.respository';
-import { Injectable } from '@nestjs/common';
 import { CreateCoverageDTO } from '../dto/create.coverage.dto';
 import { CovegareAlreadyExists } from '../errors/coverage-already-exists.error';
 
@@ -14,19 +14,24 @@ export class CreateCoverageService {
     capital,
     premium,
   }: CreateCoverageDTO) {
-    const coverageExists = await this.coverageRepository.findById(coverageId);
+    try {
+      const coverageExists = await this.coverageRepository.findById(coverageId);
 
-    if (coverageExists) {
-      throw new CovegareAlreadyExists();
+      if (coverageExists) {
+        throw new CovegareAlreadyExists();
+      }
+
+      const coverage = await this.coverageRepository.create({
+        name,
+        capital,
+        description,
+        premium,
+      });
+
+      return coverage;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
     }
-
-    const coverage = await this.coverageRepository.create({
-      name,
-      capital,
-      description,
-      premium,
-    });
-
-    return coverage;
   }
 }
