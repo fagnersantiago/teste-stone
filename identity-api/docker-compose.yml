@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+    database:
+        image: postgres
+        container_name: identity
+        restart: always
+        ports:
+            - 5432:5432
+        mem_limit: 1g     
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=identityDb
+        volumes:
+            - pgdata:/data/postgres
+
+    app:
+        build: .
+        container_name: identityAPI
+        restart: always
+        ports:
+            - 3030:3030
+
+        volumes:
+            - .:/usr/app
+        links:
+            - database
+        depends_on:
+            - database
+
+volumes:
+    pgdata:
+        driver: local
