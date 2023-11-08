@@ -1,7 +1,7 @@
 import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
 import { Insurance } from 'src/insusrance/entities/insurance';
 
-export abstract class InsuranceRepository {
+export abstract class CalculateInsuranceRepository {
   abstract create({
     age,
     occupationCode,

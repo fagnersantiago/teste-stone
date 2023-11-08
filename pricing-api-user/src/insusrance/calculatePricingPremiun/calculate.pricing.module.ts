@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
+import { CalculatePrigingInsuranceService } from './calculate.pricing.service';
+import { CalculatePriginInsuranceController } from './calculate.pricing.controller';
 import { DatabaseModule } from '../infra/database/prisma/database.module';
-import { CalculatePrigingInsuranceService } from './calculate.pricing.inusrance.service';
-import { CalculatePriginInsuranceController } from './calculate.pricing.insurance.controller';
 import { ErrorInterceptor } from '../errors/interceptor/interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
@@ -17,4 +17,4 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     },
   ],
 })
-export class CalculatePrincingInsuranceModule {}
+export class PrincingModule {}

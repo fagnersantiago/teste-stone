@@ -17,17 +17,17 @@ model AgeFactor {
 }
 
 model Occupation {
-  id       String     @id @default(uuid())
+  id       String      @id @default(uuid())
   code     String
   name     String
   active   Boolean
   factor   Float
-  Isurance Isurance[]
+  Isurance Insurance[]
 
   @@map("occupation")
 }
 
-model Isurance {
+model Insurance {
   id             String       @id @default(uuid())
   age            Int
   occupationCode String

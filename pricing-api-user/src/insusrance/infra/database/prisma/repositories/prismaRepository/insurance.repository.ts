@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common/decorators';
 import { Insurance } from 'src/insusrance/entities/insurance';
 import { PrismaService } from '../../prisma.service';
-import { InsuranceRepository } from '../insurance.respository';
+import { CalculateInsuranceRepository } from '../insurance.respository';
 import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
 
 @Injectable()
 export class PrismaCalculatePricingInsuranceRepository
-  implements InsuranceRepository
+  implements CalculateInsuranceRepository
 {
   constructor(private prisma: PrismaService) {}
 

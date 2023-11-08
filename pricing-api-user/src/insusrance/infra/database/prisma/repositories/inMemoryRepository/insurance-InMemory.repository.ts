@@ -1,8 +1,10 @@
 import { Insurance } from 'src/insusrance/entities/insurance';
-import { InsuranceRepository } from '../insurance.respository';
+import { CalculateInsuranceRepository } from '../insurance.respository';
 import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
 
-export class InMemoryCoverageRepository implements InsuranceRepository {
+export class InMemoryCoverageRepository
+  implements CalculateInsuranceRepository
+{
   private calculateprincingRepository: Insurance[] = [];
 
   // async update(data: UpdateCoverageDto): Promise<Insurance> {
