@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ErrorInterceptor } from './coverage/errors/interceptor/interceptor';
+import { ErrorInterceptor } from 'src/insusrance/errors/interceptor/interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalInterceptors(new ErrorInterceptor());
+  app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3001);
+  await app.listen(3000);
 }
 bootstrap().catch((error) => {
   console.error('Failed to start the application', error);

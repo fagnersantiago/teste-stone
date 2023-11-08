@@ -10,8 +10,6 @@ import { catchError } from 'rxjs/operators';
 import { CovegareAlreadyExists } from '../coverage-already-exists.error';
 import { PasswordValidator } from '../password-validator';
 import { CoverageNotFound } from '../coverage-not-found';
-//import { UserIsNotAdmin } from '../user-not-admin';
-//import { InvalidUsernameOrPassword } from '../invalid-user-or-password';
 
 @Injectable()
 export class ErrorInterceptor implements NestInterceptor {

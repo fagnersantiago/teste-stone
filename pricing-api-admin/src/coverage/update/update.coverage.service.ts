@@ -2,7 +2,6 @@ import { CoverageRepository } from '../infra/database/prisma/repositories/covera
 import { Injectable } from '@nestjs/common';
 import { CoverageNotFound } from '../errors/coverage-not-found';
 import { UpdateCoverageDto } from '../dto/update.coverage.dto';
-//import { UserIsNotAdmin } from '../errors/user-not-admin';
 
 @Injectable()
 export class UpdateCoverageService {
