@@ -6,7 +6,7 @@ import {
 import { CalculateInsuranceRepository } from '../infra/database/prisma/repositories/insurance.respository';
 import { InvalidAge } from '../errors/invalid-age';
 import { InvalidCaptial } from '../errors/invalid-capital';
-import { InativeOrInativeOccupation } from '../errors/inative-or- not-found-occupation';
+import { InactiveOrInativeOccupation } from '../errors/inative-or- not-found-occupation';
 
 @Injectable()
 export class CalculateQuoteInsuranceService {
@@ -22,7 +22,7 @@ export class CalculateQuoteInsuranceService {
       const occupationCodeExists =
         await this.prisma.findOccupationCode(occupationCode);
       if (!occupationCodeExists) {
-        throw new InativeOrInativeOccupation();
+        throw new InactiveOrInativeOccupation();
       }
 
       const isValidAge = await this.prisma.checkFactorAge(age);
@@ -73,7 +73,6 @@ export class CalculateQuoteInsuranceService {
       };
       return calculatePremiumResponse;
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException();
     }
   }

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { InativeOrInativeOccupation } from '../inative-or- not-found-occupation';
+import { InactiveOrInativeOccupation } from '../inative-or- not-found-occupation';
 import { InvalidAge } from '../invalid-age';
 import { InvalidCaptial } from '../invalid-capital';
 
@@ -19,10 +19,10 @@ export class ErrorInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse();
 
         switch (true) {
-          case error instanceof InativeOrInativeOccupation:
+          case error instanceof InactiveOrInativeOccupation:
             response
               .status(HttpStatus.BAD_REQUEST)
-              .json(new InativeOrInativeOccupation().getResponse());
+              .json(new InactiveOrInativeOccupation().getResponse());
             break;
 
           case error instanceof InvalidAge:
