@@ -2,11 +2,11 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { CalculatePrigingInsuranceService } from './calculate.pricing.service';
 import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
 
-@Controller('insurance')
+@Controller('quote')
 export class CalculatePriginInsuranceController {
   constructor(private calculatePricing: CalculatePrigingInsuranceService) {}
 
-  @Post('/calculate')
+  @Post('/create')
   async handle(@Body() requestData: CalculatePricingDto) {
     try {
       const result = await this.calculatePricing.execute({

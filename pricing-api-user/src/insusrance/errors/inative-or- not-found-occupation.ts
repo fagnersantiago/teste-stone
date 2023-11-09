@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class InvalidOrInativeOccupation extends HttpException {
+export class InativeOrInativeOccupation extends HttpException {
   constructor() {
     super(
       {
         error: {
           code: HttpStatus.BAD_REQUEST,
-          message: 'Inactive or invalid occupation',
+          message: 'Occupation inative or not found',
         },
       },
       HttpStatus.BAD_REQUEST,

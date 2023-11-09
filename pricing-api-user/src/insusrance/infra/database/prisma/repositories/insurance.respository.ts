@@ -1,3 +1,4 @@
+import { Occupation } from '@prisma/client';
 import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
 import { Insurance } from 'src/insusrance/entities/insurance';
 
@@ -9,13 +10,10 @@ export abstract class CalculateInsuranceRepository {
     coverages,
   }: CalculatePricingDto): Promise<Insurance | null>;
 
-  // abstract findAge(
-  //   age: number,
-  //   occupationCode: string,
-  //   capital: number,
-  //   coverages: string[],
-  // ): Promise<Insurance>;
+  abstract checkFactorAge(age: number): Promise<boolean>;
   // abstract update(data: UpdateCoverageDto): Promise<Insurance>;
-  // abstract findById(coverageId: string): Promise<Insurance | null>;
-  // abstract delete(covergeId: string): Promise<boolean>;
+  abstract findOccupationCode(
+    occupationCode: string,
+  ): Promise<Occupation | null>;
+  abstract fetchCoverageData(coverages: string[]): Promise<any[]>;
 }

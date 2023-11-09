@@ -3,24 +3,44 @@ import { Insurance } from 'src/insusrance/entities/insurance';
 import { PrismaService } from '../../prisma.service';
 import { CalculateInsuranceRepository } from '../insurance.respository';
 import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
+import { Occupation } from '@prisma/client';
+import axios from 'axios';
 
 @Injectable()
 export class PrismaCalculatePricingInsuranceRepository
   implements CalculateInsuranceRepository
 {
   constructor(private prisma: PrismaService) {}
+  private readonly apiUrl = 'http://localhost:3001/coverage/';
 
-  // async findAge(
-  //   age: number,
-  //   occupationCode: string,
-  //   capital: number,
-  //   coverages: string[],
-  // ): Promise<Insurance> {
-  //   const ageFactor = await this.prisma.age.findFirst({
-  //     where: { age: { lte: age } },
-  //     orderBy: { age: 'desc' },
-  //   });
-  // }
+  async checkFactorAge(age: number): Promise<boolean> {
+    const checkAge = await this.prisma.ageFactor.findFirst({
+      where: {
+        age: { lte: age },
+      },
+      orderBy: { age: 'desc' },
+    });
+
+    if (checkAge.age < 18 || checkAge.age > 60) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async findOccupationCode(occupationCode: string): Promise<Occupation> {
+    const code = await this.prisma.occupation.findFirst({
+      where: {
+        code: occupationCode,
+      },
+    });
+
+    if (!code || !code.active) {
+      return null;
+    }
+
+    return code;
+  }
 
   async create({
     age,
@@ -28,7 +48,7 @@ export class PrismaCalculatePricingInsuranceRepository
     capital,
     coverages,
   }: CalculatePricingDto): Promise<Insurance | null> {
-    const calculate = await this.prisma.isurance.create({
+    const calculate = await this.prisma.insurance.create({
       data: {
         age,
         occupationCode,
@@ -40,36 +60,19 @@ export class PrismaCalculatePricingInsuranceRepository
     return calculate;
   }
 
-  // async update(data: UpdateCoverageDto): Promise<Insurance> {
-  //   const coverage = await this.prisma.coverage.update({
-  //     where: {
-  //       coverageId: data.coverageId,
-  //     },
-  //     data: data,
-  //   });
-  //   return coverage as Insurance;
-  // }
-
-  // async findById(data: any): Promise<Insurance | null> {
-  //   const coverageExists = await this.prisma.coverage.findFirst({
-  //     where: { coverageId: data.coverageId },
-  //   });
-
-  //   if (!coverageExists) {
-  //     return null;
-  //   }
-
-  //   return coverageExists;
-  // }
-
-  // async delete(covergeId: string): Promise<boolean> {
-  //   await this.prisma.coverage.update({
-  //     where: { coverageId: covergeId },
-  //     data: {
-  //       isDeleted: true,
-  //     },
-  //   });
-
-  //   return true;
-  //}
+  async fetchCoverageData(coverages: string[]): Promise<any[]> {
+    return Promise.all(
+      coverages.map(async (coverageId) => {
+        try {
+          const response = await axios.get(`${this.apiUrl}/${coverageId}`);
+          return response.data;
+        } catch (error) {
+          console.error(
+            `Erro ao obter cobertura ${coverageId}: ${error.message}`,
+          );
+          return null;
+        }
+      }),
+    );
+  }
 }
