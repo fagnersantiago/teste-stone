@@ -32,16 +32,17 @@ export class PrismaCoverageRepository implements CoverageRepository {
     return coverage as Coverage;
   }
 
-  async findById(data: any): Promise<Coverage | null> {
-    const coverageExists = await this.prisma.coverage.findFirst({
-      where: { coverageId: data.coverageId },
+  async findById(coverageId: string): Promise<Coverage | null> {
+    const coverage = await this.prisma.coverage.findFirst({
+      where: {
+        coverageId: coverageId,
+      },
     });
 
-    if (!coverageExists) {
-      return null;
+    if (coverage) {
+      return coverage as Coverage;
     }
-
-    return coverageExists;
+    return null;
   }
 
   async delete(covergeId: string): Promise<boolean> {

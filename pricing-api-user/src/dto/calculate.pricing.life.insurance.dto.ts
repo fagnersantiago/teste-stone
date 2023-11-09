@@ -16,8 +16,8 @@ export class CalculatePricingDto {
 }
 
 export class CalculatePremiumResponse {
-  ageFactor: number;
-  occupationFactor: number;
+  age: number;
+  occupationCode: string;
   coverages: PremiumResult[];
   capital: number;
   premium: number;

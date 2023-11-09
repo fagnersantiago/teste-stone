@@ -1,12 +1,15 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CalculatePricingDto } from '../../dto/calculate.pricing.life.insurance.dto';
+import {
+  CalculatePricingDto,
+  CalculatePremiumResponse,
+} from '../../dto/calculate.pricing.life.insurance.dto';
 import { CalculateInsuranceRepository } from '../infra/database/prisma/repositories/insurance.respository';
 import { InvalidAge } from '../errors/invalid-age';
 import { InvalidCaptial } from '../errors/invalid-capital';
 import { InativeOrInativeOccupation } from '../errors/inative-or- not-found-occupation';
 
 @Injectable()
-export class CalculatePrigingInsuranceService {
+export class CalculateQuoteInsuranceService {
   constructor(private prisma: CalculateInsuranceRepository) {}
 
   async execute({
@@ -14,17 +17,15 @@ export class CalculatePrigingInsuranceService {
     occupationCode,
     capital,
     coverages,
-  }: CalculatePricingDto) {
+  }: CalculatePricingDto): Promise<CalculatePremiumResponse> {
     try {
       const occupationCodeExists =
         await this.prisma.findOccupationCode(occupationCode);
-
       if (!occupationCodeExists) {
         throw new InativeOrInativeOccupation();
       }
 
       const isValidAge = await this.prisma.checkFactorAge(age);
-
       if (!isValidAge) {
         throw new InvalidAge();
       }
@@ -33,16 +34,46 @@ export class CalculatePrigingInsuranceService {
         throw new InvalidCaptial();
       }
 
-      const calculatePricing = await this.prisma.create({
+      const response = await this.prisma.fetchCoverageData(coverages);
+
+      let totalPremium = 0;
+
+      for (const coverage of response) {
+        await this.prisma.coveragePremiun({
+          age,
+          capital: coverage.capital,
+          coverages: coverage.coverageId,
+          occupationCode: coverage.occupation,
+          premium: Number(coverage.premium),
+        });
+
+        const premiumValue = !isNaN(parseFloat(coverage.premium))
+          ? parseFloat(coverage.premium)
+          : 0;
+        totalPremium += premiumValue;
+      }
+
+      await this.prisma.create({
         age,
         capital,
         occupationCode,
-        coverages,
+        coverages: response.map((item) => item.coverageId),
       });
 
-      return calculatePricing;
+      const calculatePremiumResponse: CalculatePremiumResponse = {
+        age,
+        occupationCode,
+        coverages: response.map((item) => ({
+          coverageId: item.coverageId,
+          premium: String(Number(item.premium) * totalPremium),
+        })) as any,
+
+        premium: response[0].premium,
+        capital,
+      };
+      return calculatePremiumResponse;
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }

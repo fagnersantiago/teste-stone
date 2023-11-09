@@ -2,8 +2,11 @@ import { Injectable } from '@nestjs/common/decorators';
 import { Insurance } from 'src/insusrance/entities/insurance';
 import { PrismaService } from '../../prisma.service';
 import { CalculateInsuranceRepository } from '../insurance.respository';
-import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
-import { Occupation } from '@prisma/client';
+import {
+  CalculatePremiumResponse,
+  CalculatePricingDto,
+} from 'src/dto/calculate.pricing.life.insurance.dto';
+import { AgeFactor, Occupation } from '@prisma/client';
 import axios from 'axios';
 
 @Injectable()
@@ -11,9 +14,10 @@ export class PrismaCalculatePricingInsuranceRepository
   implements CalculateInsuranceRepository
 {
   constructor(private prisma: PrismaService) {}
-  private readonly apiUrl = 'http://localhost:3001/coverage/';
 
-  async checkFactorAge(age: number): Promise<boolean> {
+  private apiUrl = 'http://localhost:3001/coverage';
+
+  async checkFactorAge(age: number): Promise<AgeFactor | null> {
     const checkAge = await this.prisma.ageFactor.findFirst({
       where: {
         age: { lte: age },
@@ -22,10 +26,10 @@ export class PrismaCalculatePricingInsuranceRepository
     });
 
     if (checkAge.age < 18 || checkAge.age > 60) {
-      return false;
+      return null;
     }
 
-    return true;
+    return checkAge;
   }
 
   async findOccupationCode(occupationCode: string): Promise<Occupation> {
@@ -65,8 +69,19 @@ export class PrismaCalculatePricingInsuranceRepository
       coverages.map(async (coverageId) => {
         try {
           const response = await axios.get(`${this.apiUrl}/${coverageId}`);
-          return response.data;
+
+          if (response.data && response.data.data) {
+            return response.data.data;
+          } else {
+            console.error(
+              `Erro ao obter cobertura ${coverageId}: Resposta inválida`,
+            );
+            return null;
+          }
         } catch (error) {
+          if (error.response && error.response.status === 404) {
+            return null;
+          }
           console.error(
             `Erro ao obter cobertura ${coverageId}: ${error.message}`,
           );
@@ -74,5 +89,27 @@ export class PrismaCalculatePricingInsuranceRepository
         }
       }),
     );
+  }
+
+  async coveragePremiun({
+    age,
+    occupationCode,
+    coverages,
+    capital,
+  }): Promise<CalculatePremiumResponse> {
+    const ageFactor = await this.checkFactorAge(age);
+    const occupation = await this.findOccupationCode(occupationCode);
+
+    const coverageFactor = Math.ceil(capital / coverages.capital);
+    const calculatePremium =
+      coverageFactor *
+      Number(coverages.premium) *
+      ageFactor.factor *
+      Number(occupation.code);
+
+    return {
+      coverages,
+      premium: Number(calculatePremium),
+    } as CalculatePremiumResponse;
   }
 }

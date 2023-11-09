@@ -1,6 +1,9 @@
 import { Insurance } from 'src/insusrance/entities/insurance';
 import { CalculateInsuranceRepository } from '../insurance.respository';
-import { CalculatePricingDto } from 'src/dto/calculate.pricing.life.insurance.dto';
+import {
+  CalculatePremiumResponse,
+  CalculatePricingDto,
+} from 'src/dto/calculate.pricing.life.insurance.dto';
 import { AgeFactor, Occupation } from '@prisma/client';
 import axios from 'axios';
 export class InMemoryCoverageRepository
@@ -27,12 +30,14 @@ export class InMemoryCoverageRepository
     );
   }
 
-  async checkFactorAge(age: number): Promise<boolean> {
-    const filtredAge = this.ageFactorReposiotry.filter((filter) => {
+  async checkFactorAge(age: number): Promise<AgeFactor | null> {
+    this.ageFactorReposiotry.filter((filter) => {
       const checkAge = filter.age;
-      return age <= 18 || age >= 60 || !checkAge;
+      if (age <= 18 || age >= 60) return null;
+      return checkAge;
     });
-    return filtredAge.length > 0;
+
+    return;
   }
 
   async create({
@@ -67,6 +72,26 @@ export class InMemoryCoverageRepository
       }),
     );
   }
-}
 
-//}
+  async coveragePremiun({
+    age,
+    occupationCode,
+    coverages,
+    capital,
+  }): Promise<CalculatePremiumResponse> {
+    const ageFactor = await this.checkFactorAge(age);
+    const occupation = await this.findOccupationCode(occupationCode);
+
+    const coverageFactor = Math.ceil(capital / coverages.capital);
+    const calculatePremium =
+      coverageFactor *
+      Number(coverages.premium) *
+      ageFactor.factor *
+      Number(occupation.code);
+
+    return {
+      coverages,
+      premium: Number(calculatePremium),
+    } as CalculatePremiumResponse;
+  }
+}

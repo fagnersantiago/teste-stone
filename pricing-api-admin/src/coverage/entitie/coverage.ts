@@ -30,7 +30,6 @@ export class Coverage {
     isDeleted,
   }: Props) {
     this._coverageId = coverageId ?? randomUUID();
-    console.log('Corver', this._coverageId);
     this.name = name;
     this.description = description;
     this.capital = capital;
