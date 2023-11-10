@@ -21,7 +21,6 @@ export class CreateCoverageService {
 
       return coverage;
     } catch (error) {
-      console.error('Error in CreateCoverageService', error);
       throw new InternalServerErrorException();
     }
   }

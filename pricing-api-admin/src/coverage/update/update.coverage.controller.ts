@@ -1,15 +1,14 @@
 import { Controller, Patch, Body, Param } from '@nestjs/common';
 import { UpdateCoverageService } from './update.coverage.service';
-//import { AuthGuard } from '@nestjs/passport';
+import { JwtMiddleware } from '../auth/jwt.middleware';
 import { UpdateCoverageDto } from '../dto/update.coverage.dto';
-//import { AccessGuard } from '../auth/strategies/access.guards';
-//@UseGuards(AuthGuard('jwt'))
+import { UseGuards } from '@nestjs/common';
 @Controller('coverage/update')
 export class UpdateCoverageController {
   constructor(private updateCoverageService: UpdateCoverageService) {}
 
   @Patch('/:coverageId')
-  // @UseGuards(AccessGuard)
+  @UseGuards(JwtMiddleware)
   async handle(
     @Param('coverageId') coverageId: string,
     @Body()

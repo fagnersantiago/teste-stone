@@ -8,5 +8,5 @@ export abstract class SingDTO {
 }
 
 export abstract class ResponseAuth {
-  access_token = process.env.JTW_PRIVATE_KEY;
+  token = process.env.JTW_PRIVATE_KEY;
 }

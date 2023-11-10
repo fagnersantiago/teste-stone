@@ -25,7 +25,7 @@ export class JwtMiddleware implements NestMiddleware {
         }
       });
     } else {
-      res.status(401).send('Token não fornecido');
+      // res.status(401).send('Token não fornecido');
     }
   }
 }

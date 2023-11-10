@@ -27,16 +27,22 @@ export class AuthService {
 
     return user;
   }
-
   async login(user: SingDTO) {
     const payload = {
       sub: user.userId,
-      userName: user.userName,
-      rule: user.rule,
+      username: user.userName,
+      role: user.rule,
     };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      data: {
+        user: {
+          userId: payload.sub,
+          username: payload.username,
+          role: payload.role,
+        },
+        token: this.jwtService.sign(payload),
+      },
     };
   }
 }
