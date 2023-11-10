@@ -6,12 +6,14 @@ import {
 } from '@nestjs/common';
 import { CreateCoverageService } from './coverage.service';
 import { CreateCoverageDTO } from '../dto/create.coverage.dto';
-
+import { JwtMiddleware } from '../auth/jwt.middleware';
+import { UseGuards } from '@nestjs/common';
 @Controller('coverage')
 export class CreateCoverageController {
   constructor(private coverageService: CreateCoverageService) {}
 
   @Post('/create')
+  @UseGuards(JwtMiddleware)
   async handle(
     @Body()
     { coverageId, name, description, premium, capital }: CreateCoverageDTO,
