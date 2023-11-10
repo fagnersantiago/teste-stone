@@ -26,21 +26,3 @@ export class CreateCoverageService {
     }
   }
 }
-
-import * as crypto from 'crypto';
-
-// Gere um par de chaves
-const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-  modulusLength: 4096,
-  publicKeyEncoding: {
-    type: 'spki',
-    format: 'pem',
-  },
-  privateKeyEncoding: {
-    type: 'pkcs8',
-    format: 'pem',
-  },
-});
-
-console.log('Chave Pública:\n', publicKey);
-console.log('Chave Privada:\n', privateKey);

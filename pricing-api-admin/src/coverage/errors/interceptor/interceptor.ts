@@ -10,6 +10,8 @@ import { catchError } from 'rxjs/operators';
 import { CovegareAlreadyExists } from '../coverage-already-exists.error';
 import { PasswordValidator } from '../password-validator';
 import { CoverageNotFound } from '../coverage-not-found';
+import { InvalidToken } from '../invalid-token';
+import { UserIsNotAdmin } from '../user-not-admin';
 
 @Injectable()
 export class ErrorInterceptor implements NestInterceptor {
@@ -37,16 +39,22 @@ export class ErrorInterceptor implements NestInterceptor {
               .json(new CoverageNotFound().getResponse());
             break;
 
-          // case error instanceof UserIsNotAdmin:
-          //   response
-          //     .status(HttpStatus.FORBIDDEN)
-          //     .json(new UserIsNotAdmin().getResponse());
-          // break;
-          // case error instanceof InvalidUsernameOrPassword:
-          //   response
-          //     .status(HttpStatus.UNAUTHORIZED)
-          //     .json(new InvalidUsernameOrPassword().getResponse());
-          //   break;
+          case error instanceof InvalidToken:
+            response
+              .status(HttpStatus.FORBIDDEN)
+              .json(new InvalidToken().getResponse());
+
+            break;
+          case error instanceof InvalidToken:
+            response
+              .status(HttpStatus.UNAUTHORIZED)
+              .json(new InvalidToken().getResponse());
+            break;
+          case error instanceof UserIsNotAdmin:
+            response
+              .status(HttpStatus.FORBIDDEN)
+              .json(new UserIsNotAdmin().getResponse());
+            break;
 
           default:
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

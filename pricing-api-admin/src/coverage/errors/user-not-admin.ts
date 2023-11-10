@@ -6,7 +6,8 @@ export class UserIsNotAdmin extends HttpException {
       {
         error: {
           code: HttpStatus.FORBIDDEN,
-          message: 'Unauthorized! Only admin can change users role',
+          message:
+            'Unauthorized! Only admin can create delete and update coverage',
         },
       },
       HttpStatus.FORBIDDEN,

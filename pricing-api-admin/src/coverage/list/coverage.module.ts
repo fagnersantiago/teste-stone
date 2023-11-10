@@ -20,6 +20,7 @@ import { DeleteCoverageService } from '../delete/delete.coverage.service';
     ListCoverageService,
     UpdateCoverageService,
     DeleteCoverageService,
+
     {
       provide: APP_INTERCEPTOR,
       useClass: ErrorInterceptor,
