@@ -9,7 +9,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { InactiveOrInativeOccupation } from '../inative-or- not-found-occupation';
 import { InvalidAge } from '../invalid-age';
-import { InvalidCaptial } from '../invalid-capital';
+import { InvalidCapital } from '../invalid-capital';
 
 @Injectable()
 export class ErrorInterceptor implements NestInterceptor {
@@ -31,10 +31,10 @@ export class ErrorInterceptor implements NestInterceptor {
               .json(new InvalidAge().getResponse());
             break;
 
-          case error instanceof InvalidCaptial:
+          case error instanceof InvalidCapital:
             response
               .status(HttpStatus.UNPROCESSABLE_ENTITY)
-              .json(new InvalidCaptial().getResponse());
+              .json(new InvalidCapital().getResponse());
             break;
 
           default:

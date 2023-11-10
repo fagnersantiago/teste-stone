@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class InvalidCaptial extends HttpException {
+export class InvalidCapital extends HttpException {
   constructor() {
     super(
       {

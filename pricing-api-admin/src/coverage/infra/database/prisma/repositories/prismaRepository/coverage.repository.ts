@@ -33,6 +33,7 @@ export class PrismaCoverageRepository implements CoverageRepository {
   }
 
   async findById(coverageId: string): Promise<Coverage | null> {
+    console.log(coverageId);
     const coverage = await this.prisma.coverage.findFirst({
       where: {
         coverageId: coverageId,

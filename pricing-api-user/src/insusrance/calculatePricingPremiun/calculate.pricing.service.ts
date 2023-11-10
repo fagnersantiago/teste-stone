@@ -5,7 +5,7 @@ import {
 } from '../../dto/calculate.pricing.life.insurance.dto';
 import { CalculateInsuranceRepository } from '../infra/database/prisma/repositories/insurance.respository';
 import { InvalidAge } from '../errors/invalid-age';
-import { InvalidCaptial } from '../errors/invalid-capital';
+import { InvalidCapital } from '../errors/invalid-capital';
 import { InactiveOrInativeOccupation } from '../errors/inative-or- not-found-occupation';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class CalculateQuoteInsuranceService {
       }
 
       if (capital < 10000 || capital > 10000000) {
-        throw new InvalidCaptial();
+        throw new InvalidCapital();
       }
 
       const response = await this.prisma.fetchCoverageData(coverages);

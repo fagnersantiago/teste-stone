@@ -1,43 +1,41 @@
-import { CreateCoverageService } from './coverage.service';
+import { ListCoverageService } from './coverage.service';
 import { InMemoryCoverageRepository } from '../infra/database/prisma/repositories/inMemoryRepository/coverage-InMemory.repository';
-import { CovegareAlreadyExists } from '../errors/coverage-already-exists.error';
+import { CoverageNotFound } from '../errors/coverage-not-found';
 
-let inMemoryUserRepository: InMemoryCoverageRepository;
-let createCoverageService: CreateCoverageService;
+let inMemoryCoveryRepository: InMemoryCoverageRepository;
+let listCoverageService: ListCoverageService;
 
-describe(' Create Coverage', () => {
+describe('Create Coverage', () => {
   beforeEach(() => {
-    inMemoryUserRepository = new InMemoryCoverageRepository();
-    createCoverageService = new CreateCoverageService(inMemoryUserRepository);
+    inMemoryCoveryRepository = new InMemoryCoverageRepository();
+    listCoverageService = new ListCoverageService(inMemoryCoveryRepository);
   });
 
-  it('Should be able create a new Covegare', async () => {
-    const sut = await createCoverageService.execute({
+  it('Should be List coverage by Id', async () => {
+    const sut = await inMemoryCoveryRepository.create({
+      coverageId: '123456',
       name: 'fake-coverage',
       description: 'fake-description',
       capital: '1000',
       premium: 'fake-premiun',
     });
 
-    expect(sut).toHaveProperty('coverageId');
+    const list = await listCoverageService.execute(sut.coverageId);
+
+    expect(list).toBe(sut);
   });
 
-  it('Should not be able to create an exiting coverage', async () => {
+  it('Should not be able to list an exiting coverage', async () => {
     await expect(async () => {
-      const sut = await createCoverageService.execute({
+      await inMemoryCoveryRepository.create({
+        coverageId: '123456',
         name: 'fake-coverage',
         description: 'fake-description',
         capital: '1000',
         premium: 'fake-premiun',
       });
 
-      await createCoverageService.execute({
-        coverageId: sut.coverageId,
-        name: sut.name,
-        description: sut.description,
-        capital: sut.capital,
-        premium: sut.premium,
-      });
-    }).rejects.toBeInstanceOf(CovegareAlreadyExists);
+      await listCoverageService.execute('WRONGID');
+    }).rejects.toBeInstanceOf(CoverageNotFound);
   });
 });

@@ -1,4 +1,4 @@
-import { Insurance } from 'src/insusrance/entities/insurance';
+import { Insurance } from '@prisma/client';
 import { CalculateInsuranceRepository } from '../insurance.respository';
 import {
   CalculatePremiumResponse,
@@ -6,7 +6,7 @@ import {
 } from 'src/dto/calculate.pricing.life.insurance.dto';
 import { AgeFactor, Occupation } from '@prisma/client';
 import axios from 'axios';
-export class InMemoryCoverageRepository
+export class InMemoryQuotePricingRepository
   implements CalculateInsuranceRepository
 {
   private insuranceQuoteRepository: Insurance[] = [];
@@ -46,7 +46,7 @@ export class InMemoryCoverageRepository
     capital,
     coverages,
   }: CalculatePricingDto): Promise<Insurance | null> {
-    const calculate = new Insurance({
+    const calculate = Object.assign({
       age,
       occupationCode,
       capital,
