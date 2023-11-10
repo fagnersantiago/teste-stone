@@ -81,7 +81,7 @@ Request Payload
 }
 ```
 
-Response Payload - HTTP STATUS `???`
+Response Payload - HTTP STATUS `201`
 
 ```json
 {
@@ -98,8 +98,35 @@ Response Payload - HTTP STATUS `???`
 }
 ```
 
-Error Response - HTTP STATUS `???` (especificar para cada erro tratado)
+Error Response - HTTP STATUS `400` (Quando uma cobertun inativa ou ocupação naão encontrada)
 
 ```json
-???
+{
+  "error": {
+    "code": "400",
+    "message": "Occupation incative or not found"
+  }
+}
+```
+
+Error Response - HTTP STATUS `400` (Quando uma quando idade abaixo de 16 e acima de 60)
+
+```json
+{
+  "error": {
+    "code": "400",
+    "message": "Invalid age. Must be between 18 and 60 years old."
+  }
+}
+```
+
+Error Response - HTTP STATUS `422` (Quando uma quando idade abaixo de 16 e acima de 60)
+
+```json
+{
+  "error": {
+    "code": "422",
+    "message": "Invalid capital. It must be between R$10000 and R$10000000."
+  }
+}
 ```
