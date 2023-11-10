@@ -13,10 +13,12 @@ export class CreateCoverageController {
 
   @Post('/create')
   async handle(
-    @Body() { name, description, premium, capital }: CreateCoverageDTO,
+    @Body()
+    { coverageId, name, description, premium, capital }: CreateCoverageDTO,
   ) {
     try {
       const coverage = await this.coverageService.execute({
+        coverageId,
         name,
         description,
         premium,
@@ -33,6 +35,7 @@ export class CreateCoverageController {
         },
       };
     } catch (error) {
+      console.log('Error in CreateCoverageController:', error);
       throw new InternalServerErrorException();
     }
   }

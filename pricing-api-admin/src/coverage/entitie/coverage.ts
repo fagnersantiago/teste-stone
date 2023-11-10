@@ -10,16 +10,12 @@ interface Props {
 }
 
 export class Coverage {
-  private _coverageId?: string;
+  public coverageId?: string;
   public name: string;
   public description: string;
   public capital: string;
   public premium: string;
   public isDeleted?: boolean;
-
-  get coverageId() {
-    return this._coverageId;
-  }
 
   constructor({
     coverageId,
@@ -29,7 +25,7 @@ export class Coverage {
     premium,
     isDeleted,
   }: Props) {
-    this._coverageId = coverageId ?? randomUUID();
+    this.coverageId = coverageId ?? randomUUID();
     this.name = name;
     this.description = description;
     this.capital = capital;

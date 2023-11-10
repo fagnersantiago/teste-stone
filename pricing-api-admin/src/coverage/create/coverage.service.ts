@@ -7,30 +7,21 @@ import { CovegareAlreadyExists } from '../errors/coverage-already-exists.error';
 export class CreateCoverageService {
   constructor(private coverageRepository: CoverageRepository) {}
 
-  async execute({
-    coverageId,
-    name,
-    description,
-    capital,
-    premium,
-  }: CreateCoverageDTO) {
+  async execute(createCoverageDTO: CreateCoverageDTO) {
     try {
-      const coverageExists = await this.coverageRepository.findById(coverageId);
+      const coverageExists = await this.coverageRepository.findById(
+        createCoverageDTO.coverageId,
+      );
 
       if (coverageExists) {
         throw new CovegareAlreadyExists();
       }
 
-      const coverage = await this.coverageRepository.create({
-        name,
-        capital,
-        description,
-        premium,
-      });
+      const coverage = await this.coverageRepository.create(createCoverageDTO);
 
       return coverage;
     } catch (error) {
-      console.log(error);
+      console.error('Error in CreateCoverageService', error);
       throw new InternalServerErrorException();
     }
   }

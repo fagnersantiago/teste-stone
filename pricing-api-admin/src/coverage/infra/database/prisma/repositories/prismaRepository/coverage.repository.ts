@@ -10,7 +10,7 @@ export class PrismaCoverageRepository implements CoverageRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateCoverageDTO): Promise<Coverage | null> {
-    const covegare = await this.prisma.coverage.create({
+    const coverage = await this.prisma.coverage.create({
       data: {
         name: data.name,
         description: data.description,
@@ -19,7 +19,7 @@ export class PrismaCoverageRepository implements CoverageRepository {
       },
     });
 
-    return covegare as Coverage;
+    return coverage as Coverage;
   }
 
   async update(data: UpdateCoverageDto): Promise<Coverage> {
@@ -33,17 +33,18 @@ export class PrismaCoverageRepository implements CoverageRepository {
   }
 
   async findById(coverageId: string): Promise<Coverage | null> {
-    console.log(coverageId);
-    const coverage = await this.prisma.coverage.findFirst({
-      where: {
-        coverageId: coverageId,
-      },
-    });
+    if (typeof coverageId !== 'undefined') {
+      const coverage = await this.prisma.coverage.findFirst({
+        where: {
+          coverageId: coverageId,
+        },
+      });
 
-    if (coverage) {
-      return coverage as Coverage;
+      if (!coverage) {
+        return null;
+      }
+      return coverage;
     }
-    return null;
   }
 
   async delete(covergeId: string): Promise<boolean> {
