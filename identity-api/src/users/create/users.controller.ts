@@ -23,7 +23,7 @@ export class UsersController {
       data: {
         userId: createUser.userId,
         userName: createUser.userName,
-        rule: createUser.rule,
+        role: createUser.rule,
       },
     };
   }

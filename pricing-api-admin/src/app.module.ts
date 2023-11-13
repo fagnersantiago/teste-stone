@@ -13,7 +13,6 @@ import { JwtMiddleware } from './coverage/auth/jwt.middleware';
       isGlobal: true,
     }),
 
-    // AuthModule,
     CoverageModule,
   ],
   providers: [

@@ -18,15 +18,7 @@ import { JwtStrategy } from './strategies/jwt.strategies';
     DatabaseModule,
     JwtModule.registerAsync({
       useFactory: async () => ({
-        privateKey: Buffer.from(process.env.JWT_PRIVATE_KEY, 'base64').toString(
-          'base64',
-        ),
-
-        publicKey: Buffer.from(process.env.JWT_PUBLIC_KEY, 'base64').toString(
-          'base64',
-        ),
-        signOptions: { expiresIn: '1d' },
-        verifyOptions: { algorithms: ['RS256'] },
+        privateKey: process.env.JWT_PRIVATE_KEY,
       }),
     }),
   ],

@@ -5,9 +5,10 @@ import { UserIsNotAdmin } from 'src/users/errors/user-not-admin';
 export class AccessGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
 
-    if (user && user.rule !== 'ADMIN') {
+    const user = request.data;
+
+    if (user && user.role !== 'ADMIN') {
       throw new UserIsNotAdmin();
     }
 

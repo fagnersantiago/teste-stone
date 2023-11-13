@@ -12,6 +12,7 @@ import { PasswordValidator } from './password-validator';
 import { UserNotFound } from './user-not-found';
 import { UserIsNotAdmin } from './user-not-admin';
 import { InvalidUsernameOrPassword } from './invalid-user-or-password';
+import { InvalidToken } from './invalid-token';
 
 @Injectable()
 export class ErrorInterceptor implements NestInterceptor {
@@ -48,6 +49,12 @@ export class ErrorInterceptor implements NestInterceptor {
             response
               .status(HttpStatus.UNAUTHORIZED)
               .json(new InvalidUsernameOrPassword().getResponse());
+            break;
+
+          case error instanceof InvalidToken:
+            response
+              .status(HttpStatus.UNAUTHORIZED)
+              .json(new InvalidToken().getResponse());
             break;
 
           default:
