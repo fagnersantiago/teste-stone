@@ -3,6 +3,7 @@ import { UpdateCoverageService } from './update.coverage.service';
 import { JwtMiddleware } from '../auth/jwt.middleware';
 import { UpdateCoverageDto } from '../dto/update.coverage.dto';
 import { UseGuards } from '@nestjs/common';
+
 @Controller('coverage/update')
 export class UpdateCoverageController {
   constructor(private updateCoverageService: UpdateCoverageService) {}

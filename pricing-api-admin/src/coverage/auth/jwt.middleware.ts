@@ -9,24 +9,41 @@ export class JwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: () => void) {
     const token = this.extractTokenFromHeader(req);
 
-    if (!token || req.headers.authorization !== token) {
+    if (!token) {
       throw new InvalidToken();
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    if (!this.isValidTokenStructure(token)) {
+      throw new InvalidToken();
+    }
 
-    const isAdmin = (decoded as any)?.role === 'ADMIN';
+    try {
+      const decoded = jwt.decode(token);
 
-    if (!isAdmin) {
-      throw new UserIsNotAdmin();
-    } else {
-      (req as any).user = decoded;
-      next();
+      const isAdmin = (decoded as any)?.role === 'ADMIN';
+
+      if (!isAdmin) {
+        throw new UserIsNotAdmin();
+      } else {
+        (req as any).user = decoded;
+        next();
+      }
+    } catch (error) {
+      throw new InvalidToken();
     }
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
+  }
+
+  private isValidTokenStructure(token: string): boolean {
+    try {
+      const decoded = jwt.decode(token);
+      return !!decoded && (decoded as any)?.role !== undefined;
+    } catch (error) {
+      return false;
+    }
   }
 }

@@ -10,6 +10,7 @@ export class AccessGuard implements CanActivate {
 
     try {
       const token = request.headers.authorization;
+      console.log(token);
       if (!token) {
         throw new InvalidToken();
       }
