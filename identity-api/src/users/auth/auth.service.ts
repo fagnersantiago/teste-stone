@@ -36,9 +36,9 @@ export class AuthService {
     return {
       data: {
         user: {
-          userId: payload.sub,
-          username: payload.username,
-          role: payload.role,
+          userId: user.userId,
+          username: user.userName,
+          role: user.rule,
         },
         token: this.jwtService.sign(payload),
       },

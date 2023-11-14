@@ -8,7 +8,9 @@ import { CreateCoverageService } from './coverage.service';
 import { CreateCoverageDTO } from '../dto/create.coverage.dto';
 import { JwtMiddleware } from '../auth/jwt.middleware';
 import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport/dist';
 @Controller('coverage')
+@UseGuards(AuthGuard('local'))
 export class CreateCoverageController {
   constructor(private coverageService: CreateCoverageService) {}
 
