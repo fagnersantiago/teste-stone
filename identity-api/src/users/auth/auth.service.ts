@@ -28,7 +28,7 @@ export class AuthService {
   }
   async login(user: SingDTO) {
     const payload = {
-      sub: user.userId,
+      userId: user.userId,
       username: user.userName,
       role: user.rule,
     };

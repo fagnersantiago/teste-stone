@@ -2,6 +2,7 @@ import { AuthService } from './auth.service';
 import { InMemoryUserRepository } from '../infra/database/prisma/repositories/inMemoryRepository/user-InMemory.repository';
 import { Rule } from '../entitie/user';
 import { InvalidUsernameOrPassword } from '../errors/invalid-user-or-password';
+import { SingDTO } from './dto/signDto';
 
 const jwtServiceMock = {
   sign: jest.fn(),
@@ -21,24 +22,26 @@ describe('AuthService', () => {
   });
 
   it('should generate an access token for the user', async () => {
-    const userDto = {
-      userId: 1,
+    const user: SingDTO = {
+      userId: '1',
       userName: 'testuser',
       password: '$2b$10$1234567890',
       rule: Rule.USER,
     };
 
     const expectedPayload = {
-      sub: userDto.userId,
-      userName: userDto.userName,
-      rule: userDto.rule,
+      userId: user.userId,
+      username: user.userName,
+      role: user.rule,
     };
 
     jwtServiceMock.sign.mockReturnValue('mocked-access-token');
 
-    const result = await authService.login(userDto);
+    const result = await authService.login(user);
 
-    expect(result).toEqual({ access_token: 'mocked-access-token' });
+    expect(result.data.token).toEqual('mocked-access-token');
+    expect(result.data.user).toEqual(expectedPayload);
+
     expect(jwtServiceMock.sign).toHaveBeenCalledWith(expectedPayload);
   });
 

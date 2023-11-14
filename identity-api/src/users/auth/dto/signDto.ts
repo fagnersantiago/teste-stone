@@ -1,7 +1,7 @@
 import { Rule } from 'src/users/entitie/user';
 
 export abstract class SingDTO {
-  userId: number;
+  userId: string;
   userName: string;
   password: string;
   rule: Rule;
